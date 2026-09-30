@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eink-frame.local/schemas/frame-manifest-v1.json",
+  "title": "Frame manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "frame_id", "created_at", "width", "height", "pixel_format", "palette_encoding", "byte_length", "sha256", "url", "preset", "processing"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "frame_id": { "type": "string", "format": "uuid" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "width": { "const": 1200 },
+    "height": { "const": 1600 },
+    "pixel_format": { "const": "spectra6-nibbles" },
+    "palette_encoding": { "type": "string", "minLength": 1 },
+    "byte_length": { "const": 960000 },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "url": { "type": "string", "minLength": 1 },
+    "source_asset_id": { "type": ["string", "null"] },
+    "preset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "revision"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "revision": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "processing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pipeline_version", "dithering", "brightness", "contrast", "saturation", "gamma", "sharpness", "dithering_strength"],
+      "properties": {
+        "pipeline_version": { "const": "python-rgb-v1" },
+        "dithering": { "enum": ["none", "floyd-steinberg", "good-display-floyd-v1", "atkinson", "sierra-lite", "jarvis-judice-ninke", "bayer-4x4", "bayer-8x8"] },
+        "brightness": { "type": "number", "minimum": -100, "maximum": 100 },
+        "contrast": { "type": "number", "minimum": -100, "maximum": 100 },
+        "saturation": { "type": "number", "minimum": -100, "maximum": 100 },
+        "gamma": { "type": "number", "minimum": 0.1, "maximum": 5 },
+        "sharpness": { "type": "number", "minimum": -100, "maximum": 100 },
+        "dithering_strength": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

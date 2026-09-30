@@ -1,0 +1,58 @@
+[project]
+name = "eink-weather-frame"
+version = "0.1.0"
+description = "Weather-driven Spectra 6 image pipeline and ESP32 backend"
+requires-python = ">=3.11"
+dependencies = [
+  "alembic>=1.16,<2",
+  "fastapi>=0.116,<1",
+  "httpx>=0.28,<1",
+  "numba>=0.62,<0.63",
+  "numpy>=2.2,<2.4",
+  "pillow>=11,<12",
+  "psycopg[binary]>=3.2,<4",
+  "pydantic>=2.11,<3",
+  "python-multipart>=0.0.20,<1",
+  "sqlalchemy>=2.0,<3",
+  "uvicorn>=0.35,<1",
+]
+
+[dependency-groups]
+dev = [
+  "mypy>=1.17,<2",
+  "jsonschema>=4.25,<5",
+  "pytest>=8.4,<9",
+  "pytest-cov>=6.2,<7",
+  "ruff>=0.12,<1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+eink-spark-worker = "eink_frame.spark_worker:main"
+eink-weather-scheduler = "eink_frame.scheduler_service:main"
+eink-home-render-worker = "eink_frame.home_render_service:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/eink_frame"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = [
+  "postgresql_sql: compiles PostgreSQL-specific SQL without requiring a server",
+  "postgresql_live: runs destructive integration tests against the dedicated app database",
+  "no_live_postgresql: explicitly records that no live PostgreSQL integration ran",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["eink_frame"]

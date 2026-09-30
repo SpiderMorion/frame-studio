@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eink-frame.local/schemas/ota-manifest-v1.json",
+  "title": "OTA manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "hardware", "version", "build_id", "channel", "created_at", "url", "byte_length", "sha256", "signature", "signing_key_id"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "hardware": { "const": "esp32-133c02" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$" },
+    "build_id": { "type": "string", "minLength": 1 },
+    "channel": { "enum": ["development", "stable"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "url": { "type": "string", "minLength": 1 },
+    "byte_length": { "type": "integer", "minimum": 1 },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "signature": { "type": "string", "contentEncoding": "base64" },
+    "signing_key_id": { "type": "string", "minLength": 1 },
+    "mandatory": { "type": "boolean", "default": false },
+    "release_notes": { "type": "string", "default": "" }
+  }
+}

@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.16)
+project(frame_store_host_tests C)
+
+enable_testing()
+add_executable(frame_store_planner_tests test_planner.c ../frame_store_planner.c)
+target_include_directories(frame_store_planner_tests PRIVATE ../include)
+target_compile_features(frame_store_planner_tests PRIVATE c_std_11)
+target_compile_options(frame_store_planner_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+add_test(NAME frame_store_planner_tests COMMAND frame_store_planner_tests)
+
+add_executable(frame_store_journal_tests test_journal.c ../frame_store_journal.c)
+target_include_directories(frame_store_journal_tests PRIVATE ../include)
+target_compile_features(frame_store_journal_tests PRIVATE c_std_11)
+target_compile_options(frame_store_journal_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+add_test(NAME frame_store_journal_tests COMMAND frame_store_journal_tests)

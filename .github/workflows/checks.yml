@@ -1,0 +1,60 @@
+name: source checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v10.0.0
+        with:
+          version: '0.12.21'
+          enable-cache: false
+      - run: uv sync --frozen --group dev
+      - run: env -u DATABASE_URL uv run --frozen pytest -q
+      - run: env -u DATABASE_URL uv run --frozen ruff check src tests migrations
+      - run: env -u DATABASE_URL uv run --frozen mypy
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+        working-directory: frontend
+      - run: npm test
+        working-directory: frontend
+      - run: npm run lint
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
+  host-firmware:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        source:
+          - firmware
+          - firmware/esp-idf/components/device_state/host_test
+          - firmware/esp-idf/components/net_manager/host_test
+          - firmware/esp-idf/components/frame_store/host_tests
+          - firmware/esp-idf/components/provisioning/host_test
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - run: cmake -S "${{ matrix.source }}" -B "${{ runner.temp }}/frame-host-build"
+      - run: cmake --build "${{ runner.temp }}/frame-host-build"
+      - run: ctest --test-dir "${{ runner.temp }}/frame-host-build" --output-on-failure --no-tests=error

@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(device_state_test C)
+enable_testing()
+add_executable(device_state_test test_device_state.c ../device_state_policy.c)
+target_include_directories(device_state_test PRIVATE . ../include)
+target_compile_options(device_state_test PRIVATE -Wall -Wextra -Werror -Wpedantic)
+add_test(NAME device_state_test COMMAND device_state_test)

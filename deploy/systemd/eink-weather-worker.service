@@ -1,0 +1,21 @@
+[Unit]
+Description=Frame Studio remote generation worker (user service)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/frame-studio/worker.env
+ExecStart=%h/frame-studio-venv/bin/eink-spark-worker
+ExecStopPost=/usr/bin/docker stop --time ${EINK_COMFYUI_STOP_TIMEOUT} ${EINK_COMFYUI_CONTAINER}
+Restart=always
+RestartSec=5s
+TimeoutStopSec=75s
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+
+[Install]
+WantedBy=default.target

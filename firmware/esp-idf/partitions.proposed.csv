@@ -1,0 +1,13 @@
+# Name,     Type, SubType, Offset,   Size,     Flags
+# PROPOSED 16 MiB flash budget ONLY. Offsets/sizes require validation against
+# the selected ESP-IDF release, bootloader, app binaries, and physical module.
+# ota_0 and ota_1 are 5 MiB budget slots; this is explicitly UNVERIFIED.
+nvs,        data, nvs,     0x9000,   0x6000,
+otadata,    data, ota,     0xF000,   0x2000,
+phy_init,   data, phy,     0x11000,  0x1000,
+coredump,   data, coredump,0x12000,  0x20000,
+ota_0,      app,  ota_0,   0x40000,  0x500000,
+ota_1,      app,  ota_1,   0x540000, 0x500000,
+# 0xA40000..0xFFFFFF intentionally unassigned: filesystem sizing/subtype is
+# not defensible until the ESP-IDF/LittleFS integration and diagnostics budget
+# are selected and measured.

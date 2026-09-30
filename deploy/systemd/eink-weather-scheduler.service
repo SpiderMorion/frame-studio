@@ -1,0 +1,23 @@
+[Unit]
+Description=Frame Studio scheduler
+After=network-online.target postgresql.service eink-weather-frame.service
+Wants=network-online.target eink-weather-frame.service
+
+[Service]
+Type=simple
+User=frame-studio
+Group=frame-studio
+WorkingDirectory=/opt/frame-studio
+EnvironmentFile=/etc/frame-studio/runtime.env
+UMask=0077
+ExecStart=/opt/frame-studio/.venv/bin/eink-weather-scheduler
+Restart=always
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/frame-studio
+
+[Install]
+WantedBy=multi-user.target

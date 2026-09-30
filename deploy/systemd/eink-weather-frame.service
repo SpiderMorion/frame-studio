@@ -1,0 +1,24 @@
+[Unit]
+Description=Frame Studio API and built frontend
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=frame-studio
+Group=frame-studio
+WorkingDirectory=/opt/frame-studio
+EnvironmentFile=/etc/frame-studio/runtime.env
+UMask=0077
+ExecStartPre=/opt/frame-studio/.venv/bin/alembic upgrade head
+ExecStart=/opt/frame-studio/.venv/bin/uvicorn eink_frame.main:app --host 127.0.0.1 --port 8787
+Restart=on-failure
+RestartSec=3s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/frame-studio
+
+[Install]
+WantedBy=multi-user.target

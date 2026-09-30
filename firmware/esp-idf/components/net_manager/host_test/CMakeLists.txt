@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(net_policy_test C)
+enable_testing()
+add_executable(net_policy_test test_net_policy.c ../net_policy.c)
+target_include_directories(net_policy_test PRIVATE ../include)
+target_compile_options(net_policy_test PRIVATE -Wall -Wextra -Werror -Wpedantic)
+add_test(NAME net_policy_test COMMAND net_policy_test)

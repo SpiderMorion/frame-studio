@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eink-frame.local/schemas/provider-config-v1.json",
+  "title": "Generator provider configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "kind", "enabled", "model", "timeout_seconds"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" },
+    "kind": { "enum": ["comfyui", "openai", "openai-compatible", "gemini", "bfl", "stability", "replicate", "fal"] },
+    "enabled": { "type": "boolean" },
+    "model": { "type": "string", "minLength": 1 },
+    "base_url": { "type": ["string", "null"] },
+    "secret_ref": { "type": ["string", "null"] },
+    "timeout_seconds": { "type": "integer", "minimum": 5, "maximum": 3600 },
+    "settings": { "type": "object", "additionalProperties": true }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eink-frame.local/schemas/device-manifest-v1.json",
+  "title": "Single-device frame manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "target",
+    "panel",
+    "sequence",
+    "frame_id",
+    "planned_display_at",
+    "byte_length",
+    "sha256",
+    "profile",
+    "url"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "target": { "const": "weather-frame" },
+    "panel": { "const": "GDEP133C02" },
+    "sequence": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+    "frame_id": { "type": "string", "format": "uuid" },
+    "planned_display_at": { "type": "string", "format": "date-time" },
+    "byte_length": { "const": 960000 },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "profile": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "url": { "type": "string", "pattern": "^/api/v1/frames/[0-9a-f-]{36}/frame\\.bin$" }
+  }
+}
